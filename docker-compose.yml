@@ -1,0 +1,43 @@
+version: "3"
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ./docker/dev/Dockerfile
+
+    volumes:
+      - ./node_modules:/app/node_modules
+      - .:/app
+
+    ports:
+      - 8000:8000
+
+    env_file:
+      - ./env/dev.env
+
+    depends_on:
+      - mongodb
+      - redis
+
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - social_data:/data/db
+
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=khaled
+    #   - MONGO_INITDB_ROOT_PASSWORD=123456
+    #   - MONGO_INITDB_DATABASE=social
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - social_redis:/data
+
+volumes:
+  social_data:
+  social_redis:
